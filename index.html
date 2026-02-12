@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Descubre nuestro próximo viaje</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #ff9acb 0, #ff4f81 35%, #2a0530 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 6px;
+      font-size: 2.6rem;
+      text-shadow: 0 0 18px rgba(0,0,0,0.6);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 400;
+      opacity: 0.9;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+    }
+
+    .hearts-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .heart {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: #ffdde9;
+      transform: rotate(45deg);
+      animation: floatUp 10s linear infinite;
+      opacity: 0.7;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: #ffdde9;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -9px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -9px;
+      top: 0;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(45deg);
+        opacity: 0;
+      }
+      20% { opacity: 0.7; }
+      100% {
+        transform: translateY(-10vh) rotate(45deg);
+        opacity: 0;
+      }
+    }
+
+    .layout {
+      max-width: 1250px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.1fr);
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 1000px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 18px 18px 20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.25), transparent 55%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .panel-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .game-card {
+      background: rgba(0,0,0,0.25);
+      border-radius: 16px;
+      padding: 14px 14px 16px;
+      border: 1px solid rgba(255,255,255,0.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .game-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .game-badge {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+    }
+
+    .game-body {
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .game-area {
+      margin-top: 10px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 10px;
+      min-height: 120px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      margin-top: 10px;
+      background: linear-gradient(135deg, #ffebf4, #ffd1e5);
+      color: #b0004b;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.1s ease;
+      font-size: 0.9rem;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+      filter: brightness(1.05);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .status {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      min-height: 18px;
+    }
+
+    .status.ok {
+      color: #c7ffb8;
+    }
+
+    .status.error {
+      color: #ffe0e0;
+    }
+
+    .status.info {
+      color: #ffe9ff;
+    }
+
+    .letter-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff, #ffd1e5);
+      color: #b0004b;
+      font-weight: 800;
+      font-size: 1.3rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+      margin-left: 8px;
+      opacity: 0;
+      transform: scale(0.4) translateY(10px);
+      transition: all 0.35s ease;
+    }
+
+    .letter-badge.visible {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    .letter-badge.locked {
+      background: radial-gradient(circle at 30% 30%, #f3f3f3, #bbbbbb);
+      color: #555;
+      box-shadow: none;
+    }
+
+    .final-panel-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .letters-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+      margin-bottom: 10px;
+    }
+
+    .letters-row .letter-badge {
+      width: 46px;
+      height: 46px;
+      font-size: 1.4rem;
+    }
+
+    .final-word {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-top: 10px;
+      opacity: 0;
+      transform: translateY(10px) scale(0.95);
+      transition: all 0.5s ease;
+      text-shadow: 0 0 12px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    .final-word.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .final-message {
+      margin-top: 8px;
+      font-size: 0.95rem;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.5s ease 0.1s;
+      text-align: center;
+    }
+
+    .final-message.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .small-heart {
+      display: inline-block;
+      margin-left: 4px;
+      color: #ffe6f2;
+    }
+
+    /* Memory game */
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .memory-card {
+      position: relative;
+      width: 100%;
+      padding-top: 120%;
+      cursor: pointer;
+      perspective: 600px;
+    }
+
+    .memory-inner {
+      position: absolute;
+      inset: 0;
+      border-radius: 10px;
+      transform-style: preserve-3d;
+      transition: transform 0.35s ease;
+    }
+
+    .memory-card.flipped .memory-inner,
+    .memory-card.matched .memory-inner {
+      transform: rotateY(180deg);
+    }
+
+    .memory-front,
+    .memory-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backface-visibility: hidden;
+      font-size: 1.4rem;
+    }
+
+    .memory-front {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .memory-back {
+      background: radial-gradient(circle at 30% 30%, #fff, #ffd1e5);
+      color: #b0004b;
+      transform: rotateY(180deg);
+      font-size: 1.6rem;
+    }
+
+    .memory-card.matched {
+      cursor: default;
+      opacity: 0.9;
+    }
+
+    /* Catch hearts */
+    .catch-area {
+      position: relative;
+      height: 160px;
+      border-radius: 12px;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.18), rgba(0,0,0,0.35));
+      overflow: hidden;
+    }
+
+    .catch-heart {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      background: #ffdde9;
+      transform: rotate(45deg);
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+
+    .catch-heart::before,
+    .catch-heart::after {
+      content: "";
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      background: #ffdde9;
+      border-radius: 50%;
+    }
+
+    .catch-heart::before {
+      top: -14px;
+      left: 0;
+    }
+
+    .catch-heart::after {
+      left: -14px;
+      top: 0;
+    }
+
+    .catch-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-top: 4px;
+      opacity: 0.9;
+    }
+
+    /* Trivia */
+    .trivia-question {
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .trivia-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .trivia-option {
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.85rem;
+      text-align: left;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .trivia-option:hover {
+      background: rgba(255,255,255,0.18);
+      transform: translateY(-1px);
+    }
+
+    .trivia-option.correct {
+      border-color: #c7ffb8;
+      background: rgba(199,255,184,0.12);
+    }
+
+    .trivia-option.wrong {
+      border-color: #ffb8c7;
+      background: rgba(255,184,199,0.12);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.15);
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ffe0f2, #ff7aa8);
+      transition: width 0.25s ease;
+    }
+
+    /* Cipher */
+    .cipher-text {
+      font-family: ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
+      font-size: 0.85rem;
+      background: rgba(0,0,0,0.35);
+      padding: 8px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .cipher-input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: none;
+      margin-top: 4px;
+      outline: none;
+      font-size: 0.9rem;
+    }
+
+    .small-note {
+      font-size: 0.75rem;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    /* Emoji quiz */
+    .emoji-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .emoji-option {
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.85rem;
+      text-align: left;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .emoji-option:hover {
+      background: rgba(255,255,255,0.18);
+      transform: translateY(-1px);
+    }
+
+    .emoji-option.correct {
+      border-color: #c7ffb8;
+      background: rgba(199,255,184,0.12);
+    }
+
+    .emoji-option.wrong {
+      border-color: #ffb8c7;
+      background: rgba(255,184,199,0.12);
+    }
+
+    /* Simon */
+    .simon-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .simon-btn {
+      height: 60px;
+      border-radius: 10px;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: transform 0.1s ease, opacity 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .simon-btn.active {
+      opacity: 1;
+      transform: scale(1.03);
+      box-shadow: 0 0 12px rgba(255,255,255,0.7);
+    }
+
+    .simon-btn[data-color="pink"] { background: #ff7aa8; }
+    .simon-btn[data-color="purple"] { background: #b067ff; }
+    .simon-btn[data-color="gold"] { background: #ffc857; }
+    .simon-btn[data-color="teal"] { background: #4fd1c5; }
+
+    /* Melt heart */
+    .melt-heart {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 6px;
+      transition: transform 0.2s ease;
+    }
+
+    .melt-bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.15);
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .melt-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #9fd8ff, #ff7aa8);
+      transition: width 0.15s ease;
+    }
+
+    /* Story */
+    .story-text {
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+
+    .story-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .story-option {
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.85rem;
+      text-align: left;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .story-option:hover {
+      background: rgba(255,255,255,0.18);
+      transform: translateY(-1px);
+    }
+
+    /* Compatibility */
+    .compat-question {
+      margin-bottom: 4px;
+      font-size: 0.85rem;
+    }
+
+    .compat-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .compat-option {
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      border: 1px solid transparent;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .compat-option.selected {
+      border-color: #ffb8e0;
+      background: rgba(255,184,224,0.18);
+    }
+
+    /* Reaction */
+    .reaction-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto;
+      background: #555;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .reaction-circle.ready {
+      background: #ff7aa8;
+      box-shadow: 0 0 14px rgba(255,122,168,0.8);
+      transform: scale(1.05);
+    }
+
+    .reaction-time {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts-bg" id="hearts-bg"></div>
+
+  <h1>Minijuegos</h1>
+  <h2>10 juegos, 10 letras, Descubre nuestro próximo viaje (espavila puque no te voy a ayudar jejeje)</h2>
+  <p class="subtitle">Cada minijuego desbloquea una letra. Cuando las tengáis todas, aparece la palabra completa.</p>
+
+  <div class="layout">
+    <!-- Panel de juegos -->
+    <div class="panel">
+      <div class="panel-content">
+        <h3 style="font-size:1.1rem; margin-bottom:6px;">Minijuegos de San Valentín</h3>
+
+        <div class="games-grid">
+          <!-- E - Memory -->
+          <div class="game-card" data-letter="E">
+            <div class="game-card-header">
+              <div class="game-title">E - Memory de corazones</div>
+              <div class="game-badge">Memoria</div>
+            </div>
+            <div class="game-body">
+              <p>Encuentra todas las parejas de iconos.</p>
+              <div class="game-area">
+                <div class="memory-grid" id="memory-grid"></div>
+              </div>
+              <button id="memory-reset">Reiniciar</button>
+              <span class="letter-badge locked" id="memory-letter">?</span>
+              <div class="status info" id="memory-status">Voltea cartas y busca parejas.</div>
+            </div>
+          </div>
+
+          <!-- U - Atrapa corazones -->
+          <div class="game-card" data-letter="U">
+            <div class="game-card-header">
+              <div class="game-title">U - Atrapa corazones</div>
+              <div class="game-badge">Reflejos</div>
+            </div>
+            <div class="game-body">
+              <p>Haz clic en los corazones que aparecen y desaparecen.</p>
+              <div class="game-area catch-area" id="catch-area"></div>
+              <div class="catch-info">
+                <span>Tiempo: <span id="catch-time">0</span>s</span>
+                <span>Corazones: <span id="catch-score">0</span>/<span id="catch-target">15</span></span>
+              </div>
+              <button id="catch-start">Empezar ronda</button>
+              <span class="letter-badge locked" id="catch-letter">?</span>
+              <div class="status info" id="catch-status">Pulsa “Empezar ronda” y atrapa corazones.</div>
+            </div>
+          </div>
+
+          <!-- R - Trivia romántica -->
+          <div class="game-card" data-letter="R">
+            <div class="game-card-header">
+              <div class="game-title">R - Trivia romántica</div>
+              <div class="game-badge">Quiz</div>
+            </div>
+            <div class="game-body">
+              <p>Demuestra tu cultura romántica.</p>
+              <div class="game-area">
+                <div class="trivia-question" id="trivia-question"></div>
+                <div class="trivia-options" id="trivia-options"></div>
+                <div class="progress-bar">
+                  <div class="progress-fill" id="trivia-progress"></div>
+                </div>
+              </div>
+              <button id="trivia-next">Siguiente pregunta</button>
+              <span class="letter-badge locked" id="trivia-letter">?</span>
+              <div class="status info" id="trivia-status">Responde correctamente para avanzar.</div>
+            </div>
+          </div>
+
+          <!-- O - Mensaje cifrado -->
+          <div class="game-card" data-letter="O">
+            <div class="game-card-header">
+              <div class="game-title">O - Mensaje cifrado</div>
+              <div class="game-badge">Rompecódigos</div>
+            </div>
+            <div class="game-body">
+              <p>Descifra el mensaje secreto sobre vuestro viaje.</p>
+              <div class="game-area">
+                <div class="cipher-text" id="cipher-text"></div>
+                <input type="text" class="cipher-input" id="cipher-input" placeholder="Escribe aquí el mensaje descifrado..." />
+                <div class="small-note">Cifrado César sencillo. Pista: habla de ir juntos a un lugar muy mágico.</div>
+              </div>
+              <button id="cipher-check">Comprobar</button>
+              <span class="letter-badge locked" id="cipher-letter">?</span>
+              <div class="status info" id="cipher-status">Intenta descifrar el mensaje.</div>
+            </div>
+          </div>
+
+          <!-- D - Pelis por emojis -->
+          <div class="game-card" data-letter="D">
+            <div class="game-card-header">
+              <div class="game-title">D - Pelis románticas por emojis</div>
+              <div class="game-badge">Emojis</div>
+            </div>
+            <div class="game-body">
+              <p>¿Qué película romántica se esconde tras estos emojis?</p>
+              <div class="game-area">
+                <div id="emoji-question" style="font-size:1.4rem; margin-bottom:6px;">💑🚢🧊</div>
+                <div class="emoji-options" id="emoji-options"></div>
+              </div>
+              <span class="letter-badge locked" id="emoji-letter">?</span>
+              <div class="status info" id="emoji-status">Elige la película correcta.</div>
+            </div>
+          </div>
+
+          <!-- I - Simon de colores -->
+          <div class="game-card" data-letter="I">
+            <div class="game-card-header">
+              <div class="game-title">I - Secuencia de corazones</div>
+              <div class="game-badge">Memoria</div>
+            </div>
+            <div class="game-body">
+              <p>Memoriza la secuencia de colores y repítela.</p>
+              <div class="game-area">
+                <div class="simon-grid">
+                  <div class="simon-btn" data-color="pink"></div>
+                  <div class="simon-btn" data-color="purple"></div>
+                  <div class="simon-btn" data-color="gold"></div>
+                  <div class="simon-btn" data-color="teal"></div>
+                </div>
+              </div>
+              <button id="simon-start">Iniciar secuencia</button>
+              <span class="letter-badge locked" id="simon-letter">?</span>
+              <div class="status info" id="simon-status">Pulsa “Iniciar” y sigue el patrón.</div>
+            </div>
+          </div>
+
+          <!-- S - Deshiela el corazón -->
+          <div class="game-card" data-letter="S">
+            <div class="game-card-header">
+              <div class="game-title">S - Deshiela el corazón</div>
+              <div class="game-badge">Clicker</div>
+            </div>
+            <div class="game-body">
+              <p>Rompe el hielo a base de clics.</p>
+              <div class="game-area">
+                <div class="melt-heart" id="melt-heart">💙</div>
+                <div class="melt-bar">
+                  <div class="melt-fill" id="melt-fill"></div>
+                </div>
+              </div>
+              <button id="melt-btn">Calentar corazón</button>
+              <span class="letter-badge locked" id="melt-letter">?</span>
+              <div class="status info" id="melt-status">Haz clic varias veces hasta derretirlo.</div>
+            </div>
+          </div>
+
+          <!-- N - Elige tu historia -->
+          <div class="game-card" data-letter="N">
+            <div class="game-card-header">
+              <div class="game-title">N - Elige tu historia</div>
+              <div class="game-badge">Historia</div>
+            </div>
+            <div class="game-body">
+              <p>Cread juntos una mini historia romántica.</p>
+              <div class="game-area">
+                <div class="story-text" id="story-text"></div>
+                <div class="story-options" id="story-options"></div>
+              </div>
+              <span class="letter-badge locked" id="story-letter">?</span>
+              <div class="status info" id="story-status">Elegid opciones hasta llegar al final.</div>
+            </div>
+          </div>
+
+          <!-- E (segunda) - Compatibilidad -->
+          <div class="game-card" data-letter="E2">
+            <div class="game-card-header">
+              <div class="game-title">E - Test de compatibilidad</div>
+              <div class="game-badge">Test</div>
+            </div>
+            <div class="game-body">
+              <p>Responded a unas pocas preguntas sobre vuestro estilo.</p>
+              <div class="game-area" id="compat-area"></div>
+              <button id="compat-check">Ver resultado</button>
+              <span class="letter-badge locked" id="compat-letter">?</span>
+              <div class="status info" id="compat-status">Contestad a todas las preguntas.</div>
+            </div>
+          </div>
+
+          <!-- Y - Juego de reacción -->
+          <div class="game-card" data-letter="Y">
+            <div class="game-card-header">
+              <div class="game-title">Y - Tiempo de reacción</div>
+              <div class="game-badge">Reflejos</div>
+            </div>
+            <div class="game-body">
+              <p>Haz clic cuando el círculo se ilumine.</p>
+              <div class="game-area">
+                <div class="reaction-circle" id="reaction-circle">Espera...</div>
+                <div class="reaction-time" id="reaction-time"></div>
+              </div>
+              <button id="reaction-start">Preparar</button>
+              <span class="letter-badge locked" id="reaction-letter">?</span>
+              <div class="status info" id="reaction-status">Pulsa “Preparar” y espera a que se ilumine.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel final -->
+    <div class="panel">
+      <div class="panel-content">
+        <div class="final-panel-title">Progreso hacia la palabra secreta</div>
+        <p style="font-size:0.85rem; opacity:0.9;">Cada minijuego completado desbloquea una letra de <strong>EURODISNEY</strong>.</p>
+
+        <div class="letters-row" id="letters-row"></div>
+        <div class="final-word" id="final-word">EURODISNEY</div>
+        <div class="final-message" id="final-message">
+          ¡Lo habéis conseguido! La magia del amor y de EURODISNEY está completa
+          <span class="small-heart">❤️</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Fondo de corazones flotantes ---
+    const heartsBg = document.getElementById("hearts-bg");
+    function createFloatingHearts() {
+      for (let i = 0; i < 26; i++) {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = 8 + Math.random() * 6 + "s";
+        heart.style.animationDelay = -Math.random() * 10 + "s";
+        heart.style.opacity = 0.25 + Math.random() * 0.5;
+        heartsBg.appendChild(heart);
+      }
+    }
+    createFloatingHearts();
+
+    // --- Gestión de letras globales ---
+    const lettersRow = document.getElementById("letters-row");
+    const finalWord = document.getElementById("final-word");
+    const finalMessage = document.getElementById("final-message");
+    const wordLetters = ["E","U","R","O","D","I","S","N","E","Y"];
+
+    function initLettersRow() {
+      lettersRow.innerHTML = "";
+      wordLetters.forEach(letter => {
+        const span = document.createElement("span");
+        span.className = "letter-badge locked";
+        span.textContent = letter;
+        lettersRow.appendChild(span);
+      });
+    }
+
+    initLettersRow();
+
+    function unlockGlobalLetter(letter) {
+      const badges = lettersRow.querySelectorAll(".letter-badge");
+      for (const badge of badges) {
+        if (badge.textContent === letter && badge.classList.contains("locked")) {
+          badge.classList.remove("locked");
+          badge.classList.add("visible");
+          break;
+        }
+      }
+      const allUnlocked = Array.from(badges).every(b => !b.classList.contains("locked"));
+      if (allUnlocked) {
+        finalWord.classList.add("visible");
+        finalMessage.classList.add("visible");
+      }
+    }
+
+    // --- Juego 1: Memory (E) ---
+    const memoryGrid = document.getElementById("memory-grid");
+    const memoryResetBtn = document.getElementById("memory-reset");
+    const memoryStatus = document.getElementById("memory-status");
+    const memoryLetterBadge = document.getElementById("memory-letter");
+    const memoryIcons = ["💘", "🌹", "💋", "💌", "💑", "✨"];
+    let memoryCards = [];
+    let firstCard = null;
+    let secondCard = null;
+    let lockBoard = false;
+    let matchedPairs = 0;
+    let memoryCompleted = false;
+
+    function setupMemoryGame() {
+      const pairs = [...memoryIcons, ...memoryIcons];
+      pairs.sort(() => Math.random() - 0.5);
+      memoryGrid.innerHTML = "";
+      memoryCards = [];
+      firstCard = null;
+      secondCard = null;
+      lockBoard = false;
+      matchedPairs = 0;
+      memoryCompleted = false;
+      memoryLetterBadge.classList.add("locked");
+      memoryLetterBadge.classList.remove("visible");
+      memoryLetterBadge.textContent = "?";
+      memoryStatus.textContent = "Voltea cartas y busca parejas.";
+      memoryStatus.className = "status info";
+
+      pairs.forEach(icon => {
+        const card = document.createElement("div");
+        card.className = "memory-card";
+        card.dataset.icon = icon;
+
+        const inner = document.createElement("div");
+        inner.className = "memory-inner";
+
+        const front = document.createElement("div");
+        front.className = "memory-front";
+        front.textContent = "💝";
+
+        const back = document.createElement("div");
+        back.className = "memory-back";
+        back.textContent = icon;
+
+        inner.appendChild(front);
+        inner.appendChild(back);
+        card.appendChild(inner);
+        memoryGrid.appendChild(card);
+        memoryCards.push(card);
+
+        card.addEventListener("click", () => handleMemoryClick(card));
+      });
+    }
+
+    function handleMemoryClick(card) {
+      if (lockBoard || card === firstCard || card.classList.contains("matched")) return;
+      card.classList.add("flipped");
+
+      if (!firstCard) {
+        firstCard = card;
+        return;
+      }
+
+      secondCard = card;
+      lockBoard = true;
+
+      const isMatch = firstCard.dataset.icon === secondCard.dataset.icon;
+      if (isMatch) {
+        firstCard.classList.add("matched");
+        secondCard.classList.add("matched");
+        matchedPairs++;
+        memoryStatus.textContent = "¡Pareja encontrada!";
+        memoryStatus.className = "status ok";
+        resetMemoryTurn();
+
+        if (matchedPairs === memoryIcons.length) {
+          memoryStatus.textContent = "¡Has completado el memory!";
+          memoryStatus.className = "status ok";
+          if (!memoryCompleted) {
+            memoryCompleted = true;
+            memoryLetterBadge.textContent = "E";
+            memoryLetterBadge.classList.remove("locked");
+            memoryLetterBadge.classList.add("visible");
+            unlockGlobalLetter("E");
+          }
+        }
+      } else {
+        memoryStatus.textContent = "No coinciden, inténtalo de nuevo.";
+        memoryStatus.className = "status error";
+        setTimeout(() => {
+          firstCard.classList.remove("flipped");
+          secondCard.classList.remove("flipped");
+          resetMemoryTurn();
+        }, 700);
+      }
+    }
+
+    function resetMemoryTurn() {
+      [firstCard, secondCard] = [null, null];
+      lockBoard = false;
+    }
+
+    memoryResetBtn.addEventListener("click", setupMemoryGame);
+    setupMemoryGame();
+
+    // --- Juego 2: Atrapa corazones (U) ---
+    const catchArea = document.getElementById("catch-area");
+    const catchStartBtn = document.getElementById("catch-start");
+    const catchTimeSpan = document.getElementById("catch-time");
+    const catchScoreSpan = document.getElementById("catch-score");
+    const catchTargetSpan = document.getElementById("catch-target");
+    const catchStatus = document.getElementById("catch-status");
+    const catchLetterBadge = document.getElementById("catch-letter");
+
+    let catchTimer = null;
+    let catchSpawnTimer = null;
+    let catchTimeLeft = 0;
+    let catchScore = 0;
+    const catchTarget = 15;
+    let catchRunning = false;
+    let catchCompleted = false;
+
+    catchTargetSpan.textContent = catchTarget;
+
+    function startCatchGame() {
+      if (catchRunning) return;
+      catchRunning = true;
+      catchCompleted = false;
+      catchScore = 0;
+      catchTimeLeft = 20;
+      catchScoreSpan.textContent = catchScore;
+      catchTimeSpan.textContent = catchTimeLeft;
+      catchStatus.textContent = "¡Atrapa tantos corazones como puedas!";
+      catchStatus.className = "status info";
+      catchLetterBadge.classList.add("locked");
+      catchLetterBadge.classList.remove("visible");
+      catchLetterBadge.textContent = "?";
+      catchArea.innerHTML = "";
+      catchStartBtn.disabled = true;
+
+      catchTimer = setInterval(() => {
+        catchTimeLeft--;
+        catchTimeSpan.textContent = catchTimeLeft;
+        if (catchTimeLeft <= 0) {
+          endCatchGame();
+        }
+      }, 1000);
+
+      catchSpawnTimer = setInterval(() => {
+        spawnCatchHeart();
+      }, 550);
+    }
+
+    function spawnCatchHeart() {
+      const heart = document.createElement("div");
+      heart.className = "catch-heart";
+      const areaRect = catchArea.getBoundingClientRect();
+      const size = 28;
+      const x = Math.random() * (areaRect.width - size);
+      const y = Math.random() * (areaRect.height - size);
+      heart.style.left = x + "px";
+      heart.style.top = y + "px";
+
+      heart.addEventListener("click", () => {
+        if (!catchRunning) return;
+        catchScore++;
+        catchScoreSpan.textContent = catchScore;
+        heart.remove();
+      });
+
+      catchArea.appendChild(heart);
+
+      setTimeout(() => {
+        if (heart.parentElement) heart.remove();
+      }, 900);
+    }
+
+    function endCatchGame() {
+      catchRunning = false;
+      clearInterval(catchTimer);
+      clearInterval(catchSpawnTimer);
+      catchStartBtn.disabled = false;
+      catchArea.innerHTML = "";
+
+      if (catchScore >= catchTarget) {
+        catchStatus.textContent = "¡Ronda superada! Has atrapado suficientes corazones.";
+        catchStatus.className = "status ok";
+        if (!catchCompleted) {
+          catchCompleted = true;
+          catchLetterBadge.textContent = "U";
+          catchLetterBadge.classList.remove("locked");
+          catchLetterBadge.classList.add("visible");
+          unlockGlobalLetter("U");
+        }
+      } else {
+        catchStatus.textContent = "No has llegado al objetivo, pero puedes intentarlo de nuevo.";
+        catchStatus.className = "status error";
+      }
+    }
+
+    catchStartBtn.addEventListener("click", startCatchGame);
+
+    // --- Juego 3: Trivia (R) ---
+    const triviaQuestionEl = document.getElementById("trivia-question");
+    const triviaOptionsEl = document.getElementById("trivia-options");
+    const triviaProgressFill = document.getElementById("trivia-progress");
+    const triviaNextBtn = document.getElementById("trivia-next");
+    const triviaStatus = document.getElementById("trivia-status");
+    const triviaLetterBadge = document.getElementById("trivia-letter");
+
+    const triviaQuestions = [
+      {
+        q: "¿Cuál de estas películas es considerada un clásico romántico?",
+        options: [
+          { text: "El Padrino", correct: false },
+          { text: "Antes del amanecer", correct: true },
+          { text: "Mad Max: Furia en la carretera", correct: false }
+        ]
+      },
+      {
+        q: "¿Qué hormona se asocia más con el enamoramiento?",
+        options: [
+          { text: "Dopamina", correct: true },
+          { text: "Adrenalina", correct: false },
+          { text: "Melatonina", correct: false }
+        ]
+      },
+      {
+        q: "¿Qué ciudad se conoce como 'la ciudad del amor'?",
+        options: [
+          { text: "París", correct: true },
+          { text: "Berlín", correct: false },
+          { text: "Tokio", correct: false }
+        ]
+      }
+    ];
+
+    let triviaIndex = 0;
+    let triviaAnswered = false;
+    let triviaCompleted = false;
+
+    function loadTriviaQuestion() {
+      const current = triviaQuestions[triviaIndex];
+      triviaQuestionEl.textContent = current.q;
+      triviaOptionsEl.innerHTML = "";
+      triviaAnswered = false;
+      triviaStatus.textContent = "Elige una respuesta.";
+      triviaStatus.className = "status info";
+
+      current.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "trivia-option";
+        btn.textContent = opt.text;
+        btn.addEventListener("click", () => handleTriviaAnswer(btn, opt.correct));
+        triviaOptionsEl.appendChild(btn);
+      });
+
+      const progress = (triviaIndex / triviaQuestions.length) * 100;
+      triviaProgressFill.style.width = progress + "%";
+    }
+
+    function handleTriviaAnswer(btn, isCorrect) {
+      if (triviaAnswered) return;
+      triviaAnswered = true;
+
+      const options = triviaOptionsEl.querySelectorAll(".trivia-option");
+      options.forEach(o => o.disabled = true);
+
+      if (isCorrect) {
+        btn.classList.add("correct");
+        triviaStatus.textContent = "¡Correcto! Buen ojo romántico.";
+        triviaStatus.className = "status ok";
+      } else {
+        btn.classList.add("wrong");
+        triviaStatus.textContent = "No pasa nada, el amor no va de exámenes.";
+        triviaStatus.className = "status error";
+      }
+    }
+
+    triviaNextBtn.addEventListener("click", () => {
+      if (!triviaAnswered) {
+        triviaStatus.textContent = "Responde antes de pasar a la siguiente.";
+        triviaStatus.className = "status error";
+        return;
+      }
+      triviaIndex++;
+      if (triviaIndex >= triviaQuestions.length) {
+        finishTrivia();
+      } else {
+        loadTriviaQuestion();
+      }
+    });
+
+    function finishTrivia() {
+      triviaProgressFill.style.width = "100%";
+      triviaOptionsEl.innerHTML = "";
+      triviaQuestionEl.textContent = "Has terminado la trivia romántica.";
+      triviaNextBtn.disabled = true;
+
+      if (!triviaCompleted) {
+        triviaCompleted = true;
+        triviaLetterBadge.textContent = "R";
+        triviaLetterBadge.classList.remove("locked");
+        triviaLetterBadge.classList.add("visible");
+        triviaStatus.textContent = "¡Trivia completada! Letra desbloqueada.";
+        triviaStatus.className = "status ok";
+        unlockGlobalLetter("R");
+      }
+    }
+
+    loadTriviaQuestion();
+
+    // --- Juego 4: Cipher (O) ---
+    const cipherTextEl = document.getElementById("cipher-text");
+    const cipherInput = document.getElementById("cipher-input");
+    const cipherCheckBtn = document.getElementById("cipher-check");
+    const cipherStatus = document.getElementById("cipher-status");
+    const cipherLetterBadge = document.getElementById("cipher-letter");
+
+    const plainMessage = "QUIERO IR CONTIGO A EURODISNEY";
+    const shift = 3;
+
+    function caesarEncrypt(text, shift) {
+      const A = "A".charCodeAt(0);
+      const Z = "Z".charCodeAt(0);
+      return text
+        .toUpperCase()
+        .split("")
+        .map(ch => {
+          const code = ch.charCodeAt(0);
+          if (code >= A && code <= Z) {
+            const offset = ((code - A + shift) % 26) + A;
+            return String.fromCharCode(offset);
+          }
+          return ch;
+        })
+        .join("");
+    }
+
+    const ciphered = caesarEncrypt(plainMessage, shift);
+    cipherTextEl.textContent = ciphered;
+
+    let cipherCompleted = false;
+
+    cipherCheckBtn.addEventListener("click", () => {
+      const value = cipherInput.value.trim().toUpperCase();
+      if (!value) {
+        cipherStatus.textContent = "Escribe tu intento de mensaje descifrado.";
+        cipherStatus.className = "status error";
+        return;
+      }
+
+      if (value === plainMessage) {
+        cipherStatus.textContent = "¡Exacto! Ese sí que es un buen plan.";
+        cipherStatus.className = "status ok";
+        if (!cipherCompleted) {
+          cipherCompleted = true;
+          cipherLetterBadge.textContent = "O";
+          cipherLetterBadge.classList.remove("locked");
+          cipherLetterBadge.classList.add("visible");
+          unlockGlobalLetter("O");
+        }
+      } else {
+        cipherStatus.textContent = "No es exactamente eso... pero la intención cuenta. Ajusta alguna palabra.";
+        cipherStatus.className = "status error";
+      }
+    });
+
+    // --- Juego 5: Emoji quiz (D) ---
+    const emojiQuestionEl = document.getElementById("emoji-question");
+    const emojiOptionsEl = document.getElementById("emoji-options");
+    const emojiStatus = document.getElementById("emoji-status");
+    const emojiLetterBadge = document.getElementById("emoji-letter");
+    let emojiCompleted = false;
+
+    const emojiQuiz = {
+      emojis: "💑🚢🧊",
+      options: [
+        { text: "Titanic", correct: true },
+        { text: "La La Land", correct: false },
+        { text: "Pretty Woman", correct: false }
+      ]
+    };
+
+    function setupEmojiQuiz() {
+      emojiQuestionEl.textContent = emojiQuiz.emojis;
+      emojiOptionsEl.innerHTML = "";
+      emojiStatus.textContent = "Elige la película correcta.";
+      emojiStatus.className = "status info";
+      emojiQuiz.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "emoji-option";
+        btn.textContent = opt.text;
+        btn.addEventListener("click", () => {
+          if (emojiCompleted) return;
+          const all = emojiOptionsEl.querySelectorAll(".emoji-option");
+          all.forEach(b => b.disabled = true);
+          if (opt.correct) {
+            btn.classList.add("correct");
+            emojiStatus.textContent = "¡Correcto! Nada más romántico que un barco y un iceberg.";
+            emojiStatus.className = "status ok";
+            if (!emojiCompleted) {
+              emojiCompleted = true;
+              emojiLetterBadge.textContent = "D";
+              emojiLetterBadge.classList.remove("locked");
+              emojiLetterBadge.classList.add("visible");
+              unlockGlobalLetter("D");
+            }
+          } else {
+            btn.classList.add("wrong");
+            emojiStatus.textContent = "No es esa, pero buena elección. Prueba otra.";
+            emojiStatus.className = "status error";
+            all.forEach(b => b.disabled = false);
+          }
+        });
+        emojiOptionsEl.appendChild(btn);
+      });
+    }
+
+    setupEmojiQuiz();
+
+    // --- Juego 6: Simon (I) ---
+    const simonButtons = document.querySelectorAll(".simon-btn");
+    const simonStartBtn = document.getElementById("simon-start");
+    const simonStatus = document.getElementById("simon-status");
+    const simonLetterBadge = document.getElementById("simon-letter");
+
+    const simonColors = ["pink", "purple", "gold", "teal"];
+    let simonSequence = [];
+    let simonPlayerIndex = 0;
+    let simonPlaying = false;
+    let simonCompleted = false;
+
+    function flashSimonButton(color) {
+      const btn = document.querySelector('.simon-btn[data-color="' + color + '"]');
+      if (!btn) return;
+      btn.classList.add("active");
+      setTimeout(() => btn.classList.remove("active"), 350);
+    }
+
+    function playSimonSequence() {
+      simonPlaying = true;
+      simonStatus.textContent = "Observa la secuencia...";
+      simonStatus.className = "status info";
+      let i = 0;
+      const interval = setInterval(() => {
+        flashSimonButton(simonSequence[i]);
+        i++;
+        if (i >= simonSequence.length) {
+          clearInterval(interval);
+          simonPlaying = false;
+          simonPlayerIndex = 0;
+          simonStatus.textContent = "Repite la secuencia pulsando los colores.";
+        }
+      }, 550);
+    }
+
+    function startSimon() {
+      if (simonPlaying) return;
+      if (simonCompleted) {
+        simonStatus.textContent = "Ya has completado este juego.";
+        simonStatus.className = "status ok";
+        return;
+      }
+      simonSequence = [];
+      for (let i = 0; i < 5; i++) {
+        const color = simonColors[Math.floor(Math.random() * simonColors.length)];
+        simonSequence.push(color);
+      }
+      playSimonSequence();
+    }
+
+    simonButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (simonPlaying || simonCompleted || simonSequence.length === 0) return;
+        const color = btn.dataset.color;
+        flashSimonButton(color);
+        if (color === simonSequence[simonPlayerIndex]) {
+          simonPlayerIndex++;
+          if (simonPlayerIndex >= simonSequence.length) {
+            simonStatus.textContent = "¡Perfecto! Has seguido toda la secuencia.";
+            simonStatus.className = "status ok";
+            if (!simonCompleted) {
+              simonCompleted = true;
+              simonLetterBadge.textContent = "I";
+              simonLetterBadge.classList.remove("locked");
+              simonLetterBadge.classList.add("visible");
+              unlockGlobalLetter("I");
+            }
+          }
+        } else {
+          simonStatus.textContent = "Te has equivocado, pero puedes volver a intentarlo.";
+          simonStatus.className = "status error";
+          simonSequence = [];
+        }
+      });
+    });
+
+    simonStartBtn.addEventListener("click", startSimon);
+
+    // --- Juego 7: Melt heart (S) ---
+    const meltHeart = document.getElementById("melt-heart");
+    const meltFill = document.getElementById("melt-fill");
+    const meltBtn = document.getElementById("melt-btn");
+    const meltStatus = document.getElementById("melt-status");
+    const meltLetterBadge = document.getElementById("melt-letter");
+    let meltProgress = 0;
+    let meltCompleted = false;
+
+    meltBtn.addEventListener("click", () => {
+      if (meltCompleted) {
+        meltStatus.textContent = "Ese corazón ya está derretido.";
+        meltStatus.className = "status ok";
+        return;
+      }
+      meltProgress = Math.min(100, meltProgress + 8 + Math.random() * 7);
+      meltFill.style.width = meltProgress + "%";
+      meltHeart.style.transform = "scale(" + (1 + meltProgress / 300) + ")";
+      meltStatus.textContent = "Calentando...";
+      meltStatus.className = "status info";
+
+      if (meltProgress >= 100) {
+        meltHeart.textContent = "❤️";
+        meltStatus.textContent = "¡Corazón deshelado! Ahora sí que hay calor.";
+        meltStatus.className = "status ok";
+        if (!meltCompleted) {
+          meltCompleted = true;
+          meltLetterBadge.textContent = "S";
+          meltLetterBadge.classList.remove("locked");
+          meltLetterBadge.classList.add("visible");
+          unlockGlobalLetter("S");
+        }
+      }
+    });
+
+    // --- Juego 8: Story (N) ---
+    const storyTextEl = document.getElementById("story-text");
+    const storyOptionsEl = document.getElementById("story-options");
+    const storyStatus = document.getElementById("story-status");
+    const storyLetterBadge = document.getElementById("story-letter");
+    let storyStep = 0;
+    let storyCompleted = false;
+
+    const storySteps = [
+      {
+        text: "Es San Valentín y tenéis todo el día libre. ¿Por dónde empieza el plan?",
+        options: [
+          "Desayuno tranquilo en la cama.",
+          "Escapada improvisada en coche."
+        ]
+      },
+      {
+        text: "A mitad de día, ¿qué apetece más?",
+        options: [
+          "Paseo por una ciudad bonita.",
+          "Perderse en un parque de atracciones."
+        ]
+      },
+      {
+        text: "Para rematar el día perfecto...",
+        options: [
+          "Cena con velas y brindis.",
+          "Ver fuegos artificiales abrazados."
+        ]
+      }
+    ];
+
+    function renderStoryStep() {
+      const step = storySteps[storyStep];
+      storyTextEl.textContent = step.text;
+      storyOptionsEl.innerHTML = "";
+      step.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "story-option";
+        btn.textContent = opt;
+        btn.addEventListener("click", () => {
+          if (storyCompleted) return;
+          storyStep++;
+          if (storyStep >= storySteps.length) {
+            storyTextEl.textContent = "Habéis creado un día perfecto. Solo falta elegir el destino...";
+            storyOptionsEl.innerHTML = "";
+            storyStatus.textContent = "Historia completada. Suena a viaje pendiente.";
+            storyStatus.className = "status ok";
+            if (!storyCompleted) {
+              storyCompleted = true;
+              storyLetterBadge.textContent = "N";
+              storyLetterBadge.classList.remove("locked");
+              storyLetterBadge.classList.add("visible");
+              unlockGlobalLetter("N");
+            }
+          } else {
+            renderStoryStep();
+          }
+        });
+        storyOptionsEl.appendChild(btn);
+      });
+    }
+
+    renderStoryStep();
+
+    // --- Juego 9: Compatibilidad (E segunda) ---
+    const compatArea = document.getElementById("compat-area");
+    const compatCheckBtn = document.getElementById("compat-check");
+    const compatStatus = document.getElementById("compat-status");
+    const compatLetterBadge = document.getElementById("compat-letter");
+    let compatCompleted = false;
+
+    const compatQuestions = [
+      {
+        id: "plan",
+        text: "Plan ideal de pareja:",
+        options: ["Cena romántica", "Aventura y viaje", "Sofá, manta y peli"]
+      },
+      {
+        id: "regalo",
+        text: "Regalo que más ilusión te hace:",
+        options: ["Algo hecho a mano", "Una experiencia juntos", "Un detalle sorpresa"]
+      },
+      {
+        id: "ritmo",
+        text: "Ritmo perfecto para el día:",
+        options: ["Tranquilo y relajado", "Lleno de actividades", "Mitad relax, mitad aventura"]
+      }
+    ];
+
+    const compatAnswers = {};
+
+    function renderCompat() {
+      compatArea.innerHTML = "";
+      compatQuestions.forEach(q => {
+        const qEl = document.createElement("div");
+        qEl.className = "compat-block";
+        const title = document.createElement("div");
+        title.className = "compat-question";
+        title.textContent = q.text;
+        qEl.appendChild(title);
+
+        const opts = document.createElement("div");
+        opts.className = "compat-options";
+
+        q.options.forEach(opt => {
+          const btn = document.createElement("button");
+          btn.className = "compat-option";
+          btn.textContent = opt;
+          btn.addEventListener("click", () => {
+            compatAnswers[q.id] = opt;
+            const siblings = opts.querySelectorAll(".compat-option");
+            siblings.forEach(s => s.classList.remove("selected"));
+            btn.classList.add("selected");
+          });
+          opts.appendChild(btn);
+        });
+
+        qEl.appendChild(opts);
+        compatArea.appendChild(qEl);
+      });
+    }
+
+    renderCompat();
+
+    compatCheckBtn.addEventListener("click", () => {
+      if (compatCompleted) {
+        compatStatus.textContent = "El test ya está completado.";
+        compatStatus.className = "status ok";
+        return;
+      }
+      const allAnswered = compatQuestions.every(q => compatAnswers[q.id]);
+      if (!allAnswered) {
+        compatStatus.textContent = "Contestad a todas las preguntas primero.";
+        compatStatus.className = "status error";
+        return;
+      }
+      compatStatus.textContent = "Conclusión: sois una combinación perfecta para un viaje a EURODISNEY.";
+      compatStatus.className = "status ok";
+      compatLetterBadge.textContent = "E";
+      compatLetterBadge.classList.remove("locked");
+      compatLetterBadge.classList.add("visible");
+      compatCompleted = true;
+      unlockGlobalLetter("E");
+    });
+
+    // --- Juego 10: Reacción (Y) ---
+    const reactionCircle = document.getElementById("reaction-circle");
+    const reactionStartBtn = document.getElementById("reaction-start");
+    const reactionTimeEl = document.getElementById("reaction-time");
+    const reactionStatus = document.getElementById("reaction-status");
+    const reactionLetterBadge = document.getElementById("reaction-letter");
+
+    let reactionTimeout = null;
+    let reactionStartTime = null;
+    let reactionReady = false;
+    let reactionCompleted = false;
+
+    function resetReaction() {
+      reactionReady = false;
+      reactionCircle.classList.remove("ready");
+      reactionCircle.textContent = "Espera...";
+      reactionTimeEl.textContent = "";
+    }
+
+    reactionStartBtn.addEventListener("click", () => {
+      if (reactionCompleted) {
+        reactionStatus.textContent = "Ya has demostrado tus reflejos.";
+        reactionStatus.className = "status ok";
+        return;
+      }
+      resetReaction();
+      reactionStatus.textContent = "Cuando el círculo se ilumine, haz clic lo más rápido posible.";
+      reactionStatus.className = "status info";
+      if (reactionTimeout) clearTimeout(reactionTimeout);
+      const delay = 1000 + Math.random() * 3000;
+      reactionTimeout = setTimeout(() => {
+        reactionReady = true;
+        reactionCircle.classList.add("ready");
+        reactionCircle.textContent = "¡Ahora!";
+        reactionStartTime = performance.now();
+      }, delay);
+    });
+
+    reactionCircle.addEventListener("click", () => {
+      if (reactionCompleted) return;
+      if (!reactionReady) {
+        reactionStatus.textContent = "Te has adelantado. Vuelve a intentarlo.";
+        reactionStatus.className = "status error";
+        if (reactionTimeout) clearTimeout(reactionTimeout);
+        resetReaction();
+        return;
+      }
+      const now = performance.now();
+      const diff = now - reactionStartTime;
+      reactionReady = false;
+      reactionCircle.classList.remove("ready");
+      reactionCircle.textContent = "Hecho";
+      reactionTimeEl.textContent = "Tiempo de reacción: " + diff.toFixed(0) + " ms";
+
+      if (diff < 450) {
+        reactionStatus.textContent = "¡Reflejos de campeón! Letra desbloqueada.";
+        reactionStatus.className = "status ok";
+        if (!reactionCompleted) {
+          reactionCompleted = true;
+          reactionLetterBadge.textContent = "Y";
+          reactionLetterBadge.classList.remove("locked");
+          reactionLetterBadge.classList.add("visible");
+          unlockGlobalLetter("Y");
+        }
+      } else {
+        reactionStatus.textContent = "Nada mal, pero puedes intentar bajar de 450 ms.";
+        reactionStatus.className = "status error";
+      }
+    });
+  </script>
+</body>
+</html>
